@@ -84,7 +84,7 @@ def diff_day():
     print(dates)
     Result = {}
     Result['Dates'] = dates
-    Result['Value'] = Diff
+    Result['Value'] = [ round(elem, 2) for elem in Diff ]
     #Result = list(zip(dates,Diff))
 
     print(Result)
@@ -121,4 +121,4 @@ def week_data():
 
 
 
-if __name__ == '__main__': app.run(debug=True)
+if __name__ == '__main__': app.run(debug=False)
