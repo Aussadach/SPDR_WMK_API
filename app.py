@@ -122,4 +122,4 @@ def week_data():
 
 
 if __name__ == '__main__': 
-    app.run(threaded = true)
+    app.run(threaded = True)
