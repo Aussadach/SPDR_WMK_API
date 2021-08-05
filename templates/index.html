@@ -16,13 +16,45 @@
       <div class="container-fluid">
         <div class="row">
             <div class = "col-sm-12">
-
               <div class="card">
                 <h5 class="card-header">SPDR Gold Tracking</h5>
                 <div class="card-body">
-                  <div>
-                    <canvas id="SPDRMinChange"></canvas>
+                  <div class="row">
+                    <div class = "col-sm-12">
+                      <div class="card">
+                        <div class="card-body">
+                          <h5 class="card-title">Current Holding :   <span style="font-size:18px" id="current-holding"></span> </h5>
+                          <!-- <p class="card-text" id="current-holding"></p> -->
+                          
+                        </div>
+
+                       
+                      
+
+                    </div>
+                    
+                    
+                    <div class = "row">
+                      <div class = "col-sm-12">
+                      
+                        <div>
+                          <canvas id="SPDRMinChange"></canvas>
+                        </div>
+                      </div>
+                      <div class = "col-sm-12">
+
+                        <canvas id="MonthChart"></canvas>
+  
+                      </div>
+                    </div>
+                    
+                    
+
+
+
                   </div>
+                  
+
                   
                 </div>
               </div>
@@ -95,7 +127,7 @@ $( document ).ready(function() {
           plugins:{
             title: {
                 display: true,
-                text: 'ค่าการเปลี่ยนแปลงของการถือครองทองคำของกองทุน SPDR (Tonnes)'
+                text: 'ค่าการเปลี่ยนแปลงของการถือครองทองคำของกองทุน SPDR ในหน่วยตัน'
             },
             legend: {
               display: false
@@ -119,5 +151,81 @@ $( document ).ready(function() {
 
 
         })
+
+
+
+
+$(document).ready(function(){
+  
+  fetch('/lastval')
+            .then(function (response) {
+            return response.json() // แปลงข้อมูลที่ได้เป็น json
+            })
+            .then(function (datas) {
+              document.getElementById('current-holding').innerHTML = datas.total_net_tonnes + "   " + "tonnes";
+
+
+
+
+            });
+
+
+
+
+
+
+  fetch('/month')
+            .then(function (response) {
+            return response.json() // แปลงข้อมูลที่ได้เป็น json
+            })
+            .then(function (datas) {
+
+              var ctx = document.getElementById('MonthChart').getContext('2d');
+              var myChart = new Chart(ctx, {
+              type: 'line',
+              data: {
+                labels: datas.Dates,
+                datasets: [{ 
+                    data: datas.Value,
+                    label: "Tonnes of Gold Holding",
+                    borderColor: "rgb(62,149,205)",
+                    backgroundColor: "rgb(62,149,205,0.1)",
+                    fill:true,
+                    lineTension : 0.4,
+                  }
+                ]
+                
+              },
+              options:{
+
+                responsive : true,
+                plugins:{
+                  title: {
+                  display: true,
+                  text: 'ค่าการถือครองทองคำของกองทุน SPDR ในหน่วยตัน'
+                },
+                legend: {
+                display: false
+                }
+
+                }
+              }
+            });
+
+
+
+
+
+
+
+
+            })
+
+});
+
+
+
+
+
 
 </script>

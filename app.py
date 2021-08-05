@@ -51,6 +51,27 @@ app = Flask(__name__)
 def index():
     return render_template('index.html')
 
+
+@app.route('/lastval')
+def today_value():
+    sql_string = """select * from spdr_gold_data order by cast(date_ as date) DESC LIMIT 1"""
+    result = db.execute(sql_string)
+    # db.commit()
+    # db.close()
+
+    for i in result:
+        # print(i.date_, i.last_sale, i.total_net_ounces,
+        #       i.total_net_tonnes, i.net_asset_value_in_trust)
+        # print(type(i.date_))
+        detail = {}
+        detail['date_'] = str(i.date_)
+        detail['last_sale'] = float(i.last_sale)
+        detail['total_net_ounces'] = float(i.total_net_ounces)
+        detail['total_net_tonnes'] = float(i.total_net_tonnes)
+        detail['net_asset_value_in_trust'] = float(i.net_asset_value_in_trust)
+
+    return detail
+
 @app.route('/Diff')
 def diff_day():
     # read data of today - 8
@@ -68,26 +89,18 @@ def diff_day():
         Current_val.append(float(i.total_net_tonnes))
 
 
-    print(dates)
-    print(Current_val)
-
+   
     Past_val = Current_val 
-    print(Current_val[1:])
-    print(Past_val[:-1])
     Diff = list(map(operator.sub, Current_val[1:], Past_val[:-1]))
     dates = dates[1:]
-    print(Diff)
     Diff.reverse()
-    print(Diff)
-    print(dates)
     dates.reverse()
-    print(dates)
     Result = {}
     Result['Dates'] = dates
     Result['Value'] = [ round(elem, 2) for elem in Diff ]
     #Result = list(zip(dates,Diff))
 
-    print(Result)
+    
     # for i in result:
     #     # print(i.date_, i.last_sale, i.total_net_ounces,
     #     #       i.total_net_tonnes, i.net_asset_value_in_trust)
@@ -114,12 +127,38 @@ def diff_day():
     return Result
 
 
-@app.route('/data')
-def week_data():
+@app.route('/month')
+def month_data():
 
-    return True
+    sql_string = """select * from spdr_gold_data order by cast(date_ as date) DESC LIMIT 30"""
+    result = db.execute(sql_string)
+
+    
+    dates = []
+    Current_val = []
+    for i in result :
+        
+        dates.append(str(i.date_))
+        Current_val.append(float(i.total_net_tonnes))
+    
+    dates.reverse()
+    Current_val.reverse()
+    
+    Result = {}
+    Result['Dates'] = dates
+    Result['Value'] = [ round(elem, 2) for elem in Current_val ]
+
+
+
+
+
+
+
+
+    return Result
 
 
 
 if __name__ == '__main__': 
-    app.run(threaded = True)
+    # app.run(threaded = True)
+    app.run(debug = True)
