@@ -91,8 +91,18 @@ def diff_day():
 
    
     Past_val = Current_val 
-    Diff = list(map(operator.sub, Current_val[1:], Past_val[:-1]))
+    # print("Current Value")
+    # print(Current_val[:-1])
+    # print("Current Value 1:")
+    # print(Current_val)
+
+    # print("Past Value [-1]")
+    # print(Past_val[:-1])
+
+    Diff = list(map(operator.sub, Current_val[:-1], Past_val[1:]))
+    #print(Diff)
     dates = dates[1:]
+
     Diff.reverse()
     dates.reverse()
     Result = {}
