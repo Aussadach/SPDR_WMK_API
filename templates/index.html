@@ -113,6 +113,7 @@ $( document ).ready(function() {
 
         plugins : [ChartDataLabels],
         options:{
+          aspectRatio:1.2,
           scales : {
             y : {
               suggestedMin: -5,
@@ -197,7 +198,26 @@ $(document).ready(function(){
                 
               },
               options:{
+                responsive : true,
+                aspectRatio:1.2,
+                scales:{
+                  x :{
+                    grid :
+                   { 
+                    display : false,
+                  }
 
+                  },
+                  y:{
+
+                    grid:{
+                      display: false, 
+
+                    }
+                  }
+
+
+                },
                 responsive : true,
                 plugins:{
                   title: {
