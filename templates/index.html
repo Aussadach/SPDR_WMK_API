@@ -23,9 +23,9 @@
                     <div class = "col-sm-12">
                       <div class="card">
                         <div class="card-body">
-                          <h5 class="card-title">Current Holding :   <span style="font-size:18px" id="current-holding"></span> </h5>
+                          <h5 class="card-title">Current Holding :   <span style="font-size:18px; float:right;" id="current-holding"></span> </h5>
                           <!-- <p class="card-text" id="current-holding"></p> -->
-                          
+                          <h5 class="card-title">Change from yesterday :   <span style="font-size:18px; float:right;" id="current_diff"></span> </h5>
                         </div>
 
                        
@@ -85,13 +85,40 @@
 <script>
 
 
+function Show_curren_diff(val) {
+    var spanText = document.getElementById('current_diff');
+    
+    var color = "Black";
+    
+    if (val > 0) {
+        color = "green";
+        spanText.innerHTML = "+"+val+ "   " + "tonnes" ;
+    } 
+    else if (val < 0) {
+        color = "red";
+        spanText.innerHTML = "-"+val+ "   " + "tonnes";
+    }
+    else{
+      spanText.innerHTML = val+ "   " + "tonnes" ;
+
+    }
+    
+    spanText.style.color = color;
+    
+}
+
+
+
 $( document ).ready(function() {
     fetch('/Diff')
             .then(function (response) {
             return response.json() // แปลงข้อมูลที่ได้เป็น json
             })
             .then(function (datas) {
-           
+      var last_change = datas.Value[datas.Value.length - 1] ;
+      // console.log(last_change);
+      // document.getElementById('current_diff').innerHTML = last_change + "   " + "tonnes";
+      Show_curren_diff(last_change);
 			const data = datas.Value;
 			const colours = data.map((value) => value < 0 ? 'rgb(255, 99, 132,0.7)' : 'rgb(75, 192, 192,0.7)');
 			var ctx = document.getElementById('SPDRMinChange').getContext('2d');
