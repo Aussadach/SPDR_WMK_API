@@ -229,6 +229,7 @@ def diff_week():
         last_that_day = last_day(last_that_day,'saturday')
         date_lst.append(last_that_day.strftime("%Y-%m-%d"))
         
+        
     print(date_lst)
 
 
