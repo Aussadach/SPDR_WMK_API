@@ -233,7 +233,7 @@ def diff_week():
     print(date_lst)
 
 
-    sql_string = """select * from spdr_gold_data where date_ in """+f"{tuple(date_lst)}"+""" order by cast(date_ as date) DESC LIMIT 8"""
+    sql_string = """select * from spdr_gold_data where date_ in """+f"{tuple(date_lst)}"+""" order by cast(date_ as date) DESC LIMIT 7"""
     result = db.execute(sql_string)
 
     print(result)
