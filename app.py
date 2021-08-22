@@ -90,7 +90,7 @@ def diff_day():
     elif(datetime.now(tz=pytz.timezone('US/Eastern')).strftime('%A')=='Sunday'):
      selected_date = (datetime.now(tz=pytz.timezone('Asia/Bangkok'))-timedelta(days=1)).strftime('%Y-%m-%d')
     else:
-     selected_date =datetime.now(tz=pytz.timezone('Asia/Bangkok').strftime('%Y-%m-%d')
+     selected_date =datetime.now(tz=pytz.timezone('Asia/Bangkok').strftime('%Y-%m-%d'))
 
 
 
