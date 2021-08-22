@@ -85,27 +85,53 @@ def diff_day():
     # read data of today - 8
     # Get date today - 8
     # Query Where date >= today - 8
-    if(datetime.now(tz=pytz.timezone('US/Eastern')).strftime('%A')=='Saturday'):
-     selected_date = datetime.now(tz=pytz.timezone('Asia/Bangkok')).strftime('%Y-%m-%d')
-    elif(datetime.now(tz=pytz.timezone('US/Eastern')).strftime('%A')=='Sunday'):
-     selected_date = (datetime.now(tz=pytz.timezone('Asia/Bangkok'))-timedelta(days=1)).strftime('%Y-%m-%d')
-    else:
-     selected_date =datetime.now(tz=pytz.timezone('Asia/Bangkok').strftime('%Y-%m-%d'))
+    # if(datetime.now(tz=pytz.timezone('US/Eastern')).strftime('%A')=='Saturday'):
+    #  selected_date = datetime.now(tz=pytz.timezone('Asia/Bangkok')).strftime('%Y-%m-%d')
+    # elif(datetime.now(tz=pytz.timezone('US/Eastern')).strftime('%A')=='Sunday'):
+    #  selected_date = (datetime.now(tz=pytz.timezone('Asia/Bangkok'))-timedelta(days=1)).strftime('%Y-%m-%d')
+    # else:
+    #  selected_date =datetime.now(tz=pytz.timezone('Asia/Bangkok').strftime('%Y-%m-%d'))
 
 
 
 
-    sql_string = """select * from spdr_gold_data where date_ <= """+"'"+f"{selected_date}"+"'"+"""order by cast(date_ as date) DESC LIMIT 8"""
+    # sql_string = """select * from spdr_gold_data where date_ <= """+"'"+f"{selected_date}"+"'"+"""order by cast(date_ as date) DESC LIMIT 8"""
+    sql_string = """select * from spdr_gold_data order by cast(date_ as date) DESC LIMIT 8"""
     result = db.execute(sql_string)
 
     print(result)
     dates = []
+    week_day_date = []
     Current_val = []
     for i in result:
-        print(i.date_)
-        print(type(i.date_))
-        dates.append(str(i.date_))
+        date_val = i.date_-timedelta(days=1)
+        # print(date_val)
+        # print(type(date_val))
+        # print(date_val.strftime('%A'))
+        # print(type(date_val.strftime('%A')))
+        
+        dates.append(str(date_val))
+        week_day_date.append(date_val.strftime('%A'))
         Current_val.append(float(i.total_net_tonnes))
+
+    # print(week_day_date)
+    for index,val in enumerate(week_day_date):
+        
+        if val in ('Saturday','Sunday'):
+            
+            # print(index)
+            week_day_date.pop(index)
+            dates.pop(index)
+            Current_val.pop(index)
+
+            
+
+            # print("remove : "+f"{val}")
+            
+        # print(week_day_date)
+        # print(dates)
+        # print(Current_val)
+
 
     Past_val = Current_val
     # print("Current Value")
@@ -117,14 +143,17 @@ def diff_day():
     # print(Past_val[:-1])
 
     Diff = list(map(operator.sub, Current_val[:-1], Past_val[1:]))
-    # print(Diff)
-    dates = dates[1:]
+    print(Diff)
+    dates = dates[:-1]
+    print(dates)
 
     Diff.reverse()
     dates.reverse()
     Result = {}
     Result['Dates'] = dates
     Result['Value'] = [round(elem, 2) for elem in Diff]
+
+    print(Result)
     #Result = list(zip(dates,Diff))
 
     # for i in result:
@@ -181,19 +210,21 @@ def month_data():
 def diff_week():
     # get last saturaday of past 7 week
 
-    if(datetime.now(tz=pytz.timezone('US/Eastern')).strftime('%A')=='Saturday'):
-     selected_date = datetime.now(tz=pytz.timezone('Asia/Bangkok'))
+    # if(datetime.now(tz=pytz.timezone('US/Eastern')).strftime('%A')=='Saturday'):
+    #  selected_date = datetime.now(tz=pytz.timezone('Asia/Bangkok'))
 
-    elif(datetime.now(tz=pytz.timezone('US/Eastern')).strftime('%A')=='Sunday'):
-     selected_date = (datetime.now(tz=pytz.timezone('Asia/Bangkok'))-timedelta(days=1))
-    else:
-     selected_date =datetime.now(tz=pytz.timezone('Asia/Bangkok'))
-
-
+    # elif(datetime.now(tz=pytz.timezone('US/Eastern')).strftime('%A')=='Sunday'):
+    #  selected_date = (datetime.now(tz=pytz.timezone('Asia/Bangkok'))-timedelta(days=1))
+    # else:
+    #  selected_date =datetime.now(tz=pytz.timezone('Asia/Bangkok'))
 
 
-    last_that_day = selected_date
-    date_lst = [selected_date.strftime("%Y-%m-%d")]
+
+
+    # last_that_day = selected_date
+    # date_lst = [selected_date.strftime("%Y-%m-%d")]
+    last_that_day = datetime.now(tz=pytz.timezone('Asia/Bangkok'))
+    date_lst = [last_that_day.strftime("%Y-%m-%d")]
     for i in range(7):
         last_that_day = last_day(last_that_day,'saturday')
         date_lst.append(last_that_day.strftime("%Y-%m-%d"))
@@ -207,14 +238,33 @@ def diff_week():
     print(result)
     dates = []
     Current_val = []
+    week_day_date=[]
     for i in result:
-
-        dates.append(str(i.date_))
+        date_val = i.date_-timedelta(days=1)
+        # print(date_val)
+        # print(type(date_val))
+        # print(date_val.strftime('%A'))
+        # print(type(date_val.strftime('%A')))
+        
+        dates.append(str(date_val))
+        week_day_date.append(date_val.strftime('%A'))
+        #dates.append(str(i.date_))
         Current_val.append(float(i.total_net_tonnes))
 
+    for index,val in enumerate(week_day_date):
+        
+        if val in ('Saturday','Sunday'):
+            
+            # print(index)
+            week_day_date.pop(index)
+            dates.pop(index)
+            Current_val.pop(index)
+
+    
+
     Past_val = Current_val
-    print("dates : "+f"{dates}")
-    print("val : "f"{Current_val}")
+    # print("dates : "+f"{dates}")
+    # print("val : "f"{Current_val}")
     Diff = list(map(operator.sub, Current_val[:-1], Past_val[1:]))
     # print(Diff)
     dates = dates[:-1]
