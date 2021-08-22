@@ -102,7 +102,8 @@ def diff_day():
     dates = []
     Current_val = []
     for i in result:
-
+        print(i.date_)
+        print(type(i.date_))
         dates.append(str(i.date_))
         Current_val.append(float(i.total_net_tonnes))
 
@@ -186,7 +187,7 @@ def diff_week():
     elif(datetime.now(tz=pytz.timezone('US/Eastern')).strftime('%A')=='Sunday'):
      selected_date = (datetime.now(tz=pytz.timezone('Asia/Bangkok'))-timedelta(days=1))
     else:
-     selected_date =datetime.now(tz=pytz.timezone('Asia/Bangkok')
+     selected_date =datetime.now(tz=pytz.timezone('Asia/Bangkok'))
 
 
 
