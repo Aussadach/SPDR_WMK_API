@@ -89,6 +89,8 @@ def diff_day():
      selected_date = datetime.now(tz=pytz.timezone('Asia/Bangkok')).strftime('%Y-%m-%d')
     elif(datetime.now(tz=pytz.timezone('US/Eastern')).strftime('%A')=='Sunday'):
      selected_date = (datetime.now(tz=pytz.timezone('Asia/Bangkok'))-timedelta(days=1)).strftime('%Y-%m-%d')
+    else:
+     selected_date =datetime.now(tz=pytz.timezone('Asia/Bangkok').strftime('%Y-%m-%d')
 
 
 
@@ -183,7 +185,8 @@ def diff_week():
 
     elif(datetime.now(tz=pytz.timezone('US/Eastern')).strftime('%A')=='Sunday'):
      selected_date = (datetime.now(tz=pytz.timezone('Asia/Bangkok'))-timedelta(days=1))
-
+    else:
+     selected_date =datetime.now(tz=pytz.timezone('Asia/Bangkok')
 
 
 
