@@ -26,6 +26,7 @@
                           <h5 class="card-title">Current Holding :   <span style="font-size:18px; float:right;" id="current-holding"></span> </h5>
                           <!-- <p class="card-text" id="current-holding"></p> -->
                           <h5 class="card-title">Change from yesterday :   <span style="font-size:18px; float:right;" id="current_diff"></span> </h5>
+                          <h5 class="card-title">Change from last week :   <span style="font-size:18px; float:right;" id="lastweek_diff"></span> </h5>
                         </div>
 
                        
@@ -39,6 +40,12 @@
                       
                         <div>
                           <canvas id="SPDRMinChange"></canvas>
+                        </div>
+                      </div>
+                      <div class = "col-sm-12">
+                      
+                        <div>
+                          <canvas id="SPDRweekdiff"></canvas>
                         </div>
                       </div>
                       <div class = "col-sm-12">
@@ -85,8 +92,8 @@
 <script>
 
 
-function Show_curren_diff(val) {
-    var spanText = document.getElementById('current_diff');
+function Show_curren_diff(val,id) {
+    var spanText = document.getElementById(id);
     
     var color = "Black";
     
@@ -118,7 +125,7 @@ $( document ).ready(function() {
       var last_change = datas.Value[datas.Value.length - 1] ;
       // console.log(last_change);
       // document.getElementById('current_diff').innerHTML = last_change + "   " + "tonnes";
-      Show_curren_diff(last_change);
+      Show_curren_diff(last_change,"current_diff");
 			const data = datas.Value;
 			const colours = data.map((value) => value < 0 ? 'rgb(255, 99, 132,0.7)' : 'rgb(75, 192, 192,0.7)');
 			var ctx = document.getElementById('SPDRMinChange').getContext('2d');
@@ -155,7 +162,78 @@ $( document ).ready(function() {
           plugins:{
             title: {
                 display: true,
-                text: 'ค่าการเปลี่ยนแปลงของการถือครองทองคำของกองทุน SPDR ในหน่วยตัน'
+                text: 'ค่าการเปลี่ยนแปลงของการถือครองทองคำของกองทุน SPDR ในหน่วยตัน เทียบรายสัปดาห์'
+            },
+            legend: {
+              display: false
+            },
+            datalabels: {
+              color: '#2F3540'
+            }
+          }
+        }
+			});
+
+
+
+
+
+
+
+            });
+    
+
+
+
+        })
+
+$( document ).ready(function() {
+    fetch('/Diff_Week')
+            .then(function (response) {
+            return response.json() // แปลงข้อมูลที่ได้เป็น json
+            })
+            .then(function (datas) {
+      var last_change = datas.Value[datas.Value.length - 1] ;
+      // console.log(last_change);
+      // document.getElementById('current_diff').innerHTML = last_change + "   " + "tonnes";
+      Show_curren_diff(last_change,"lastweek_diff");
+			const data = datas.Value;
+			const colours = data.map((value) => value < 0 ? 'rgb(255, 99, 132,0.7)' : 'rgb(75, 192, 192,0.7)');
+			var ctx = document.getElementById('SPDRweekdiff').getContext('2d');
+			var SPDRMinChange = new Chart(ctx, {
+				type: 'bar',
+				data: {
+					labels: datas.Dates,
+					datasets: [
+						{
+							label: 'Tonnes of Gold',
+							data: data,
+							backgroundColor: colours,
+							borderColor: colours,
+							borderWidth: 1
+						}
+					]
+				},
+        
+
+        plugins : [ChartDataLabels],
+        options:{
+          aspectRatio:1.2,
+          scales : {
+            y : {
+              suggestedMin: -5,
+              suggestedMax: 5,
+              
+            }
+
+
+
+          },
+          responsive : true,
+          plugins:{
+            title: {
+                display: true,
+                text: 'ค่าการเปลี่ยนแปลงของการถือครองทองคำของกองทุน SPDR ในหน่วยตัน เทียบรายสัปดาห์'
             },
             legend: {
               display: false
@@ -182,7 +260,6 @@ $( document ).ready(function() {
 
 
 
-
 $(document).ready(function(){
   
   fetch('/lastval')
@@ -197,9 +274,7 @@ $(document).ready(function(){
 
             });
 
-
-
-
+  
 
 
   fetch('/month')
