@@ -85,7 +85,7 @@ def diff_day():
     # read data of today - 8
     # Get date today - 8
     # Query Where date >= today - 8
-    sql_string = """select * from spdr_gold_data order by cast(date_ as date) DESC LIMIT 8"""
+    sql_string = """select * from spdr_gold_data where date_ <= """+"'"+f"{datetime.today().strftime('%Y-%m-%d')}"+"'"+"""order by cast(date_ as date) DESC LIMIT 8"""
     result = db.execute(sql_string)
 
     print(result)
@@ -107,7 +107,7 @@ def diff_day():
 
     Diff = list(map(operator.sub, Current_val[:-1], Past_val[1:]))
     # print(Diff)
-    dates = dates[:-1]
+    dates = dates[1:]
 
     Diff.reverse()
     dates.reverse()
@@ -194,7 +194,7 @@ def diff_week():
     print("val : "f"{Current_val}")
     Diff = list(map(operator.sub, Current_val[:-1], Past_val[1:]))
     # print(Diff)
-    dates = dates[:-1]
+    dates = dates[1:]
 
     Diff.reverse()
     dates.reverse()
