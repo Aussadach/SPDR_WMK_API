@@ -229,11 +229,11 @@ def diff_week():
         last_that_day = last_day(last_that_day,'saturday')
         date_lst.append(last_that_day.strftime("%Y-%m-%d"))
         
-        
+
     print(date_lst)
 
 
-    sql_string = """select * from spdr_gold_data where date_ in """+f"{tuple(date_lst)}"+""" order by cast(date_ as date) DESC LIMIT 9"""
+    sql_string = """select * from spdr_gold_data where date_ in """+f"{tuple(date_lst)}"+""" order by cast(date_ as date) DESC LIMIT 8"""
     result = db.execute(sql_string)
 
     print(result)
