@@ -85,7 +85,15 @@ def diff_day():
     # read data of today - 8
     # Get date today - 8
     # Query Where date >= today - 8
-    sql_string = """select * from spdr_gold_data where date_ <= """+"'"+f"{datetime.today().strftime('%Y-%m-%d')}"+"'"+"""order by cast(date_ as date) DESC LIMIT 8"""
+    if(datetime.now(tz=pytz.timezone('US/Eastern')).strftime('%A')=='Saturday'):
+     selected_date = datetime.now(tz=pytz.timezone('Asia/Bangkok')).strftime('%Y-%m-%d')
+    elif(datetime.now(tz=pytz.timezone('US/Eastern')).strftime('%A')=='Sunday'):
+     selected_date = (datetime.now(tz=pytz.timezone('Asia/Bangkok'))-timedelta(days=1)).strftime('%Y-%m-%d')
+
+
+
+
+    sql_string = """select * from spdr_gold_data where date_ <= """+"'"+f"{selected_date}"+"'"+"""order by cast(date_ as date) DESC LIMIT 8"""
     result = db.execute(sql_string)
 
     print(result)
@@ -169,8 +177,19 @@ def month_data():
 @app.route('/Diff_Week')
 def diff_week():
     # get last saturaday of past 7 week
-    last_that_day = datetime.today()
-    date_lst = [datetime.today().strftime("%Y-%m-%d")]
+
+    if(datetime.now(tz=pytz.timezone('US/Eastern')).strftime('%A')=='Saturday'):
+     selected_date = datetime.now(tz=pytz.timezone('Asia/Bangkok'))
+
+    elif(datetime.now(tz=pytz.timezone('US/Eastern')).strftime('%A')=='Sunday'):
+     selected_date = (datetime.now(tz=pytz.timezone('Asia/Bangkok'))-timedelta(days=1))
+
+
+
+
+
+    last_that_day = selected_date
+    date_lst = [selected_date.strftime("%Y-%m-%d")]
     for i in range(7):
         last_that_day = last_day(last_that_day,'saturday')
         date_lst.append(last_that_day.strftime("%Y-%m-%d"))
@@ -194,7 +213,7 @@ def diff_week():
     print("val : "f"{Current_val}")
     Diff = list(map(operator.sub, Current_val[:-1], Past_val[1:]))
     # print(Diff)
-    dates = dates[1:]
+    dates = dates[:-1]
 
     Diff.reverse()
     dates.reverse()
