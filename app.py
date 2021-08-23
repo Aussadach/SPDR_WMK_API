@@ -96,41 +96,62 @@ def diff_day():
 
 
     # sql_string = """select * from spdr_gold_data where date_ <= """+"'"+f"{selected_date}"+"'"+"""order by cast(date_ as date) DESC LIMIT 8"""
-    sql_string = """select * from spdr_gold_data order by cast(date_ as date) DESC LIMIT 8"""
+    sql_string = """select * from spdr_gold_data order by cast(date_ as date) DESC LIMIT 11"""
     result = db.execute(sql_string)
 
-    print(result)
+    #print(result)
     dates = []
     week_day_date = []
     Current_val = []
     for i in result:
         date_val = i.date_-timedelta(days=1)
-        # print(date_val)
-        # print(type(date_val))
-        # print(date_val.strftime('%A'))
-        # print(type(date_val.strftime('%A')))
+        print(date_val)
+        print(type(date_val))
+        print(date_val.strftime('%A'))
+        print(type(date_val.strftime('%A')))
         
         dates.append(str(date_val))
         week_day_date.append(date_val.strftime('%A'))
         Current_val.append(float(i.total_net_tonnes))
 
-    # print(week_day_date)
-    for index,val in enumerate(week_day_date):
+    print(week_day_date)
+    # for index,val in enumerate(week_day_date):
         
-        if val in ('Saturday','Sunday'):
+        
+
+    #     if val in ('Sunday','Saturday'):
+    #         print(index)
+    #         week_day_date.pop(index)
+    #         dates.pop(index)
+    #         Current_val.pop(index)
+    #         print("remove : "+f"{val}")
+
+
+
             
+    #     print(week_day_date)
+    #     print(dates)
+    #     print(Current_val)
+
+    index = 0
+    while index < len(week_day_date):
+        if week_day_date[index] in ('Sunday','Saturday'):
             # print(index)
             week_day_date.pop(index)
             dates.pop(index)
             Current_val.pop(index)
-
+            index = index-1
             
 
-            # print("remove : "+f"{val}")
-            
+
+
+       
+        index += 1
         # print(week_day_date)
         # print(dates)
         # print(Current_val)
+        
+
 
 
     Past_val = Current_val
@@ -146,7 +167,9 @@ def diff_day():
     print(Diff)
     dates = dates[:-1]
     print(dates)
-
+    
+    Diff = Diff[:5]
+    dates = dates[:5]
     Diff.reverse()
     dates.reverse()
     Result = {}
@@ -230,7 +253,7 @@ def diff_week():
         date_lst.append(last_that_day.strftime("%Y-%m-%d"))
         
 
-    print(date_lst)
+    # print(date_lst)
 
 
     sql_string = """select * from spdr_gold_data where date_ in """+f"{tuple(date_lst)}"+""" order by cast(date_ as date) DESC LIMIT 7"""
